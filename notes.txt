@@ -1,0 +1,19 @@
+// Builduje obraz
+
+docker build -t nazwa-obrazu:tag /sciezka/do/katalogu
+
+// Taguje obraz (warto przed pushem)
+
+docker tag moj-obraz:wersja1 nazwa-uzytkownika/nazwa-repozytorium:wersja1
+
+// Pushuje obraz na platforme
+
+docker push reoskaro434/web-scrapper:v1.1
+
+// Tworzy kontener i uruchamia konsolke, montuje nosnik widzialny pod web-scrapper
+
+docker run -it --name web-scrapper-container -v E:\projects\web-scrapper\src:/web-scrapper reoskaro434/web-scrapper:v1.0
+
+// Odpala stworzony kontener
+
+docker start -i web-scrapper-container
