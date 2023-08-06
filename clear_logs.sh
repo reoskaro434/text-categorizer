@@ -1,0 +1,1 @@
+sudo rm -d -r logs
