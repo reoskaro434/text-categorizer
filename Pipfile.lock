@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "30ede11a43849169fb0eca48cad9a5f7380c6d39fb44359aac304b398afb599d"
+            "sha256": "35868ee78836166621a4a7a4505dbac055adcbd6d25a19f3a250f035b9008746"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -147,11 +147,11 @@
         },
         "resanter-logger": {
             "hashes": [
-                "sha256:17bb96e62a78c973c74e506ad3149b12fc8cddb38b3da9de90eab3f79d593ef4",
-                "sha256:527d707b39eabf1ef9cf7bf6981c28178045909d07e22255d7471b6ac39fad52"
+                "sha256:5e9fb27293da0038bf8c648b632624c286516ee011802c968ae7aa303060b270",
+                "sha256:ffc63e1c24a1e4bc49aad1bfe68b7380e24897df28e6d567813a3eaeea0fbb16"
             ],
             "index": "pypi",
-            "version": "==0.0.4"
+            "version": "==0.0.5"
         },
         "update-checker": {
             "hashes": [
