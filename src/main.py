@@ -40,5 +40,5 @@ for subreddit_name in subreddit_list:
     reddit_logger = ReLogger(subreddit_name)
     reddit_timer = Timer(reddit_logger)
 
-    RedditDataCollector(reddit_timer, reddit_logger).save_subreddit_data(subreddit_name, 4)
+    RedditDataCollector(reddit_timer, reddit_logger).save_subreddit_data(subreddit_name, 0)
 
