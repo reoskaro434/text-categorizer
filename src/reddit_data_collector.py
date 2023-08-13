@@ -56,22 +56,26 @@ class RedditDataCollector:
 
             for submission in subreddit.new(limit=submission_number):
                 counter += 1
+                try:
+                    data = {
+                        'title': submission.title,
+                        'link': submission.url,
+                        'author': submission.author_fullname,
+                        'score': submission.score,
+                        'created': submission.created,
+                    }
 
-                data = {
-                    'title': submission.title,
-                    'link': submission.url,
-                    'author': submission.author_fullname,
-                    'score': submission.score,
-                    'created': submission.created,
-                }
+                    self.logger.info(f"saving post nr: {counter} from: {subreddit_name}")
 
-                self.logger.info(f"saving post nr: {counter} from: {subreddit_name}")
+                    with open(file_path, "a") as f:
+                        if counter > 1:
+                            f.write(',\n')
 
-                with open(file_path, "a") as f:
-                    if counter > 1:
-                        f.write(',\n')
-
-                    json.dump(data, f, indent=2)
+                        json.dump(data, f, indent=2)
+                except Exception as ex:
+                    self.logger.error(f'Oh no! An error occurred while extracting data nr:{counter}')
+                    self.logger.error(submission)
+                    self.logger.error(ex)
 
                 if counter % 100 == 0:  # API rate limits is 100 per 60 seconds
                     self.logger.warning(f'This is a {counter} post. Waiting 1 minute to continue')
