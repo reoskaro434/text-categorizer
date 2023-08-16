@@ -1,43 +1,11 @@
 from resanter_logger.re_logger import ReLogger
 
 from reddit_data_collector import RedditDataCollector
+
 from timer.timer import Timer
+from globals import SUBBREDDIT_LIST
 
-subreddit_list = [
-    'health',
-    'medicine',
-    'science',
-    'Arttips',
-    'cultureshare',
-    'education',
-    'business',
-    'economy',
-    'religion',
-    'philosophy',
-    'politics',
-    'community',
-    'Relax',
-    'environment',
-    'ecology',
-    'history',
-    'Archaeology',
-    'Cooking',
-    'literature',
-    'musictheory',
-    'Astronomy',
-    'travel',
-    'geography',
-    'photography',
-    'fashion',
-    'FIlm',
-    'psychology',
-    'GYM',
-    'technology',
-    'Military',
-    'relationships'
-]
-
-for subreddit_name in subreddit_list:
+for subreddit_name in SUBBREDDIT_LIST:
     reddit_logger = ReLogger(subreddit_name)
     reddit_timer = Timer(reddit_logger)
 
