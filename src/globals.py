@@ -31,3 +31,6 @@ SUBBREDDIT_LIST = [
     'Military',
     'relationships'
 ]
+
+# related to max
+SUPPORTED_NUMBER_OF_TOKENS = 50
