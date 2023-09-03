@@ -32,5 +32,4 @@ SUBBREDDIT_LIST = [
     'relationships'
 ]
 
-# related to max
-SUPPORTED_NUMBER_OF_TOKENS = 50
+SUPPORTED_NUMBER_OF_TOKENS = 44
