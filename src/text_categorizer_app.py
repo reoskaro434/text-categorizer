@@ -1,6 +1,5 @@
 import re
 import tkinter as tk
-from tkinter import ttk
 import sys
 import tensorflow as tf
 from nltk import word_tokenize
@@ -47,21 +46,31 @@ class App(tk.Tk):
         self.text_entry = tk.Text(self, height=10)
         self.text_entry.pack(pady=10)
 
-        self.variable = tk.StringVar(self)
-        self.variable.set(None)  # domyślna wartość
-        self.dropdown = ttk.OptionMenu(self, self.variable, 'Wybierz opcję')
-        self.dropdown.pack(pady=10)
-
         self.console = tk.Text(self, height=10, state='disabled')
         self.console.pack(pady=10)
 
         sys.stdout = ConsoleOutput(self.console)
 
-        print_button = tk.Button(self, text='Categorize', command=self.categorize)
-        print_button.pack(pady=10)
+        gru_btn = tk.Button(self, text='rnn gru', command=self.rnn_gru_categorize)
+        gru_btn.pack(side=tk.LEFT, padx=5, pady=10)
+
+        rnn_simple_btn = tk.Button(self, text='rnn simple', command=self.rnn_simple_categorize)
+        rnn_simple_btn.pack(side=tk.LEFT, padx=5, pady=10)
+
+        rnn_lstm_btn = tk.Button(self, text='rnn lstm', command=self.rnn_lstm_categorize)
+        rnn_lstm_btn.pack(side=tk.LEFT, padx=5, pady=10)
+
+        decision_tree_btn = tk.Button(self, text='decision tree', command=self.decision_tree_categorize)
+        decision_tree_btn.pack(side=tk.LEFT, padx=5, pady=10)
+
+        ann_btn = tk.Button(self, text='ann', command=self.ann_categorize)
+        ann_btn.pack(side=tk.LEFT, padx=5, pady=10)
+
+        knn_btn = tk.Button(self, text='knn', command=self.knn_categorize)
+        knn_btn.pack(side=tk.LEFT, padx=5, pady=10)
 
         clear_button = tk.Button(self, text='Clear Output', command=self.clear_console)
-        clear_button.pack(side=tk.LEFT, padx=(5, 10), pady=10)
+        clear_button.pack(side=tk.RIGHT, padx=(5, 10), pady=10)
 
     def _translate_input(self):
         text = self.text_entry.get('1.0', 'end-1c')
@@ -89,14 +98,11 @@ class App(tk.Tk):
     def _print_predictions(self, predictions):
         percent_predictions = predictions[0] * 100
 
-        # for label, percentage in zip(self.loaded_label_names, percent_predictions):
-        #     print(f"{label}: {percentage:.2f}%")
-        # print('###############')
         sorted_indices = np.argsort(percent_predictions)[::-1][:5]
 
-        # Wyświetlenie 5 pierwszych etykiet i ich procentów
         for index in sorted_indices:
             print(f"{self.loaded_label_names[index]}: {percent_predictions[index]:.2f}%")
+
     def replace_if_number(self, word):
         if bool(re.match(r'^\d+$', word)):
             return 'number'
@@ -118,8 +124,8 @@ class App(tk.Tk):
         self.console.delete(1.0, tk.END)
         self.console.configure(state='disabled')
 
-    def categorize(self):
-        model = tf.keras.models.load_model('C:/Users/reosk/projects/text-categorizer/saved_models/rnn_gru_3')
+    def rnn_gru_categorize(self):
+        model = tf.keras.models.load_model('../saved_models/rnn_gru_3')
 
         glove_vector_padded = self._translate_input()
 
@@ -128,6 +134,67 @@ class App(tk.Tk):
         predictions = model.predict(glove_vector_padded_reshaped)
 
         self._print_predictions(predictions)
+
+    def rnn_simple_categorize(self):
+        model = tf.keras.models.load_model('../saved_models/rnn_simple_1')
+
+        glove_vector_padded = self._translate_input()
+
+        glove_vector_padded_reshaped = glove_vector_padded.reshape(-1, 44, 25)
+
+        predictions = model.predict(glove_vector_padded_reshaped)
+
+        self._print_predictions(predictions)
+
+    def rnn_lstm_categorize(self):
+        model = tf.keras.models.load_model('../saved_models/rnn_lstm_4')
+
+        glove_vector_padded = self._translate_input()
+
+        glove_vector_padded_reshaped = glove_vector_padded.reshape(-1, 44, 25)
+
+        predictions = model.predict(glove_vector_padded_reshaped)
+
+        self._print_predictions(predictions)
+
+    def decision_tree_categorize(self):
+        with open('../saved_models/decision_tree_model.pkl', 'rb') as file:
+            decision_tree_loaded = pickle.load(file)
+
+        glove_vector_padded = self._translate_input()
+
+        # Expand dimension
+        glove_vector_padded = np.expand_dims(glove_vector_padded, axis=0)
+
+        predictions = decision_tree_loaded.predict(glove_vector_padded)
+
+        print(f"{self.loaded_label_names[predictions[0]]}: 100%")
+
+    def ann_categorize(self):
+        model = tf.keras.models.load_model('../saved_models/ann_3')
+
+        glove_vector_padded = self._translate_input()
+
+        # Expand dimension
+        glove_vector_padded = np.expand_dims(glove_vector_padded, axis=0)
+
+        predictions = model.predict(glove_vector_padded)
+
+        self._print_predictions(predictions)
+
+    def knn_categorize(self):
+        with open('../saved_models/knn_model.pkl', 'rb') as file:
+            knn_loaded = pickle.load(file)
+
+        glove_vector_padded = self._translate_input()
+
+        # Expand dimension
+        glove_vector_padded = np.expand_dims(glove_vector_padded, axis=0)
+
+        predictions = knn_loaded.predict(glove_vector_padded)
+
+        print(f"{self.loaded_label_names[predictions[0]]}: 100%")
+
 
 # Uruchomienie aplikacji
 app = App()
