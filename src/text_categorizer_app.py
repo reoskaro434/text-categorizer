@@ -45,31 +45,46 @@ class App(tk.Tk):
 
         self.text_entry = tk.Text(self, height=10)
         self.text_entry.pack(pady=10)
-
         self.console = tk.Text(self, height=10, state='disabled')
         self.console.pack(pady=10)
 
         sys.stdout = ConsoleOutput(self.console)
 
-        gru_btn = tk.Button(self, text='rnn gru', command=self.rnn_gru_categorize)
+        gru_btn = tk.Button(
+            self, text='rnn gru', command=self.rnn_gru_categorize
+            )
         gru_btn.pack(side=tk.LEFT, padx=5, pady=10)
-
-        rnn_simple_btn = tk.Button(self, text='rnn simple', command=self.rnn_simple_categorize)
+        rnn_simple_btn = tk.Button(
+            self, 
+            text='rnn simple', 
+            command=self.rnn_simple_categorize
+            )
         rnn_simple_btn.pack(side=tk.LEFT, padx=5, pady=10)
-
-        rnn_lstm_btn = tk.Button(self, text='rnn lstm', command=self.rnn_lstm_categorize)
+        rnn_lstm_btn = tk.Button(
+            self, 
+            text='rnn lstm', 
+            command=self.rnn_lstm_categorize
+            )
         rnn_lstm_btn.pack(side=tk.LEFT, padx=5, pady=10)
-
-        decision_tree_btn = tk.Button(self, text='decision tree', command=self.decision_tree_categorize)
+        decision_tree_btn = tk.Button(
+            self, 
+            text='decision tree', 
+            command=self.decision_tree_categorize
+            )
         decision_tree_btn.pack(side=tk.LEFT, padx=5, pady=10)
-
-        ann_btn = tk.Button(self, text='ann', command=self.ann_categorize)
+        ann_btn = tk.Button(
+            self, text='ann', command=self.ann_categorize
+            )
         ann_btn.pack(side=tk.LEFT, padx=5, pady=10)
-
-        knn_btn = tk.Button(self, text='knn', command=self.knn_categorize)
+        knn_btn = tk.Button(
+            self, text='knn', command=self.knn_categorize
+            )
         knn_btn.pack(side=tk.LEFT, padx=5, pady=10)
-
-        clear_button = tk.Button(self, text='Clear Output', command=self.clear_console)
+        clear_button = tk.Button(
+            self, 
+            text='Clear Output', 
+            command=self.clear_console
+            )
         clear_button.pack(side=tk.RIGHT, padx=(5, 10), pady=10)
 
     def _translate_input(self):
@@ -78,10 +93,22 @@ class App(tk.Tk):
         text = text.lower()
         text = re.sub(r'[^a-z0-9\s]', '', text)
         word_arr = word_tokenize(text)
-        token_arr_no_stopwords = [word for word in word_arr if word not in self.stop_words]
-        lemmatized_token_arr = [self.lemmatizer.lemmatize(word) for word in token_arr_no_stopwords]
-        replace_if_number_arr = [self.replace_if_number(lem) for lem in lemmatized_token_arr]
-        apply_word2vec_model_arr = [self.apply_word2vec_model(lem) for lem in replace_if_number_arr]
+        token_arr_no_stopwords = [
+            word for word in word_arr 
+            if word not in self.stop_words
+            ]
+        lemmatized_token_arr = [
+            self.lemmatizer.lemmatize(word) 
+            for word in token_arr_no_stopwords
+            ]
+        replace_if_number_arr = [
+            self.replace_if_number(lem) 
+            for lem in lemmatized_token_arr
+            ]
+        apply_word2vec_model_arr = [
+            self.apply_word2vec_model(lem) 
+            for lem in replace_if_number_arr
+            ]
 
         # Stack vectors into a single numpy array
         glove_array = np.vstack(apply_word2vec_model_arr)
@@ -91,9 +118,14 @@ class App(tk.Tk):
         desired_length = 1100
 
         if len(glove_array) > desired_length:
-            raise ValueError('input exceeded limit' + len(glove_array))
-
-        return np.pad(glove_array, (0, desired_length - len(glove_array)), 'constant')
+            raise ValueError(
+                'input exceeded limit' + len(glove_array)
+                )
+        return np.pad(
+            glove_array, 
+            (0, desired_length - len(glove_array)), 
+            'constant'
+            )
 
     def _print_predictions(self, predictions):
         percent_predictions = predictions[0] * 100
